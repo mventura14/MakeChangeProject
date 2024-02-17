@@ -7,16 +7,56 @@ public class MakeChange {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 
-		boolean userInput = false;
+		boolean userInput = true;
+
+		while (true) {
+			System.out.print("(1)Run Test | (2) Run App: ");
+			String runTest = sc.nextLine().toLowerCase();
+			if (runTest.equals("1")) {
+				userInput = false;
+				break;
+
+			} else if (runTest.equals("2")) {
+				userInput = true;
+				break;
+			}
+
+		}
+
+		while (true) {
+			System.out.println();
+			System.out.println("--------------------------");
+			System.out.println("-- Welcome Register App --");
+			System.out.println("--------------------------");
+
+			runApp(userInput, sc);
+
+			System.out.printf("%nPress enter to continue: Enter \"exit\" to quit: ");
+			sc.nextLine();
+			String quit = sc.nextLine().toLowerCase();
+
+			if (quit.equals("exit")) {
+				break;
+			}
+			System.out.println();
+			System.out.println("**************************************");
+
+		}
+
+		sc.close();
+
+	}
+
+	public static void runApp(boolean userInput, Scanner scanner) {
 		double amountDue;
 		double tendered;
 
 		if (userInput) {
 			System.out.print("What is the total Amount Due:  $");
-			amountDue = sc.nextDouble();
+			amountDue = scanner.nextDouble();
 
 			System.out.print("What amount is being tindered: $");
-			tendered = sc.nextDouble();
+			tendered = scanner.nextDouble();
 
 		} else {
 
@@ -29,7 +69,6 @@ public class MakeChange {
 		}
 
 		double difference = tendered - amountDue;
-
 		System.out.printf("Change:    	  $%.2f %n", difference);
 
 		if (amountDue == tendered) {
@@ -45,9 +84,7 @@ public class MakeChange {
 
 		}
 
-		sc.close();
-
-	}
+	};
 
 	public static double randomDbl() {
 
@@ -67,13 +104,13 @@ public class MakeChange {
 		String changeStr = "";
 
 		double getChange = change;
-		double prevVal = reduction(getChange);
+		double prevVal = getReduction(getChange);
 
 		int count = 0;
 
 		while (getChange > 0) {
 
-			double reduce = reduction(getChange);
+			double reduce = getReduction(getChange);
 
 			if (prevVal != reduce) {
 
@@ -98,7 +135,7 @@ public class MakeChange {
 
 	}
 
-	public static double reduction(double getChange) {
+	public static double getReduction(double getChange) {
 		double reduceBy = 0;
 
 		reduceBy = getChange >= 00.01 ? 00.01 : reduceBy;
@@ -117,6 +154,7 @@ public class MakeChange {
 	}
 
 	public static String getCurrencyStr(double prev, int count) {
+
 		String currency = "";
 
 		switch (String.format("%.2f", prev)) {
@@ -165,4 +203,5 @@ public class MakeChange {
 		return String.format("%d %s%n", count, currency);
 
 	}
+
 }
