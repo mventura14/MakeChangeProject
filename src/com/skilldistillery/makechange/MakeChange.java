@@ -1,21 +1,51 @@
 package com.skilldistillery.makechange;
 
+import java.util.Scanner;
+
 public class MakeChange {
 
 	public static void main(String[] args) {
-		double itemCost = randomDbl();
-		double amountPayed = randomDbl();
-		double difference = amountPayed - itemCost;
+		Scanner sc = new Scanner(System.in);
 
-		System.out.printf("Item Cost:    $%.2f %n", itemCost);
-		System.out.printf("Amount payed: $%.2f %n", amountPayed);
-		System.out.printf("Difference:   $%.2f %n", difference);
+		boolean userInput = false;
+		double amountDue;
+		double tendered;
 
-		if (amountPayed > itemCost) {
-			getChange(difference);
+		if (userInput) {
+			System.out.print("What is the total Amount Due:  $");
+			amountDue = sc.nextDouble();
+
+			System.out.print("What amount is being tindered: $");
+			tendered = sc.nextDouble();
+
 		} else {
-			System.out.println("Sorry, you dont have enough");
+
+			amountDue = randomDbl();
+			tendered = randomDbl();
+
+			System.out.printf("Amount Tendered:  $%.2f %n", tendered);
+			System.out.printf("Purchase Price:   $%.2f %n", amountDue);
+
 		}
+
+		double difference = tendered - amountDue;
+
+		System.out.printf("Change:    	  $%.2f %n", difference);
+
+		if (amountDue == tendered) {
+			System.out.println("Thank you, have a nice day.");
+
+		} else if (tendered > amountDue) {
+
+			getChange(difference);
+
+		} else {
+
+			System.out.println("Sorry, you dont have enough");
+
+		}
+
+		sc.close();
 
 	}
 
@@ -27,28 +57,16 @@ public class MakeChange {
 		double randomNum = (Math.random() * (max + 1)) + min;
 		double value = Math.round(randomNum * 100.0) / 100.0;
 
-//		System.out.println("ran Gen: " + randomNum + " " + value);
+//		System.out.printf("RandomDbl: %.2f from %f", value,randomNum);
 
 		return value;
 	}
 
-	public static double payedAmount(double itemCost) {
-
-		double randomNum = randomDbl();
-
-		while (itemCost > randomNum) {
-			randomNum = randomDbl();
-		}
-
-		return randomNum;
-	}
-
 	public static void getChange(double change) {
+
 		String changeStr = "";
-		String str2 = "";
 
 		double getChange = change;
-
 		double prevVal = reduction(getChange);
 
 		int count = 0;
@@ -59,11 +77,8 @@ public class MakeChange {
 
 			if (prevVal != reduce) {
 
-				changeStr += String.format("%d : %.2f %n", count, prevVal);
-//				System.out.println(changeStr);
-
-				str2 += getDollarCurrency(prevVal, count);
-//				System.out.println(str2);
+				changeStr += getCurrencyStr(prevVal, count);
+//				changeStr += ", ";
 
 				count = 0;
 			}
@@ -74,21 +89,17 @@ public class MakeChange {
 			prevVal = reduce;
 			count++;
 
-//			System.out.println();
-//			System.out.println("Current Count:" + count + " prevVal: " + prevVal);
-//			System.out.printf("getChange: %.2f %n", getChange);
-//			System.out.println();
-
 		}
-		changeStr += String.format("%d : %.2f %n", count, prevVal);
+
+		System.out.println("--------------------------");
+		changeStr += getCurrencyStr(prevVal, count);
+//		changeStr += ".";
 		System.out.println(changeStr);
-		str2 += getDollarCurrency(prevVal, count);
-		System.out.println(str2);
 
 	}
 
 	public static double reduction(double getChange) {
-		double reduceBy = 100.0;
+		double reduceBy = 0;
 
 		reduceBy = getChange >= 00.01 ? 00.01 : reduceBy;
 		reduceBy = getChange >= 00.05 ? 00.05 : reduceBy;
@@ -105,7 +116,7 @@ public class MakeChange {
 		return reduceBy;
 	}
 
-	public static String getDollarCurrency(double prev, int count) {
+	public static String getCurrencyStr(double prev, int count) {
 		String currency = "";
 
 		switch (String.format("%.2f", prev)) {
@@ -137,20 +148,21 @@ public class MakeChange {
 			currency = "Nickel";
 			break;
 		case "0.01":
-			currency = count > 1 ? "Penny" : "Pennies";
+			currency = count > 1 ? "Pennies" : "Penny";
 			break;
 
 		default:
 			break;
 
 		}
+		;
 
-		if (count > 1 && count > 0.01) {
+		if (count > 1 && prev > 0.01) {
 			currency += "s";
 		}
 		;
-//		System.out.printf("%d %s %n", count, currency);
-		return String.format("%d %s, ", count, currency);
+
+		return String.format("%d %s%n", count, currency);
 
 	}
 }
