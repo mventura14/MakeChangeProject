@@ -25,21 +25,21 @@ public class MakeChange {
 
 		while (true) {
 			System.out.println();
-			System.out.println("--------------------------");
+			printLine();
 			System.out.println("-- Welcome Register App --");
-			System.out.println("--------------------------");
+			printLine();
 
 			runApp(userInput, sc);
 
-			System.out.printf("%nPress enter to continue: Enter \"exit\" to quit: ");
-			sc.nextLine();
+			System.out.printf("%nPress enter to continue. Enter \"exit\" to quit: ");
+
 			String quit = sc.nextLine().toLowerCase();
 
 			if (quit.equals("exit")) {
 				break;
 			}
 			System.out.println();
-			System.out.println("**************************************");
+			printLine();
 
 		}
 
@@ -52,35 +52,42 @@ public class MakeChange {
 		double tendered;
 
 		if (userInput) {
-			System.out.print("What is the total Amount Due:  $");
-			amountDue = scanner.nextDouble();
+			String str1 = "Total Amount Due:  $";
+			String str2 = "Amount Tendered:   $";
 
-			System.out.print("What amount is being tindered: $");
-			tendered = scanner.nextDouble();
+			System.out.print("");
+			amountDue = validDblInp(scanner, str1);
+			tendered = validDblInp(scanner, str2);
+
+//			dump
+			scanner.nextLine();
+
+			printLine();
 
 		} else {
 
 			amountDue = randomDbl();
 			tendered = randomDbl();
 
-			System.out.printf("Amount Tendered:  $%.2f %n", tendered);
-			System.out.printf("Purchase Price:   $%.2f %n", amountDue);
-
 		}
+
+		System.out.printf("Amount Tendered:  $%.2f %n", tendered);
+		System.out.printf("Purchase Price:   $%.2f %n", amountDue);
 
 		double difference = tendered - amountDue;
 		System.out.printf("Change:    	  $%.2f %n", difference);
 
 		if (amountDue == tendered) {
-			System.out.println("Thank you, have a nice day.");
+			printLine();
+			System.out.println("Payed in full.");
 
 		} else if (tendered > amountDue) {
 
 			getChange(difference);
 
 		} else {
-
-			System.out.println("Sorry, you dont have enough");
+			printLine();
+			System.out.println("Not enough.");
 
 		}
 
@@ -193,15 +200,36 @@ public class MakeChange {
 			break;
 
 		}
-		;
 
 		if (count > 1 && prev > 0.01) {
 			currency += "s";
 		}
-		;
 
 		return String.format("%d %s%n", count, currency);
 
+	}
+
+	public static double validDblInp(Scanner scanner, String str) {
+		double num = 2.0;
+		boolean validInput = false;
+
+		while (!validInput) {
+			System.out.printf(str);
+			if (scanner.hasNextDouble()) {
+				validInput = true; // Mark input as valid
+				num = scanner.nextDouble();
+			} else {
+				System.out.println("Invalid input");
+				scanner.next(); // Discard invalid input
+			}
+		}
+
+		return num;
+
+	}
+
+	public static void printLine() {
+		System.out.println("--------------------------");
 	}
 
 }
